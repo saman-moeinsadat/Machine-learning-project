@@ -10,3 +10,4 @@ def transformPrefs(prefs):
             result[item][other] = prefs[other][item]
 
     return result
+    print('hello world')
