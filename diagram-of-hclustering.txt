@@ -1,0 +1,133 @@
+[Command: python -u /home/saman/Machine-Learning-Projects/clusters.py]
+-
+  -
+    O'Reilly Radar
+    -
+      PaulStamatiou.com - Technology, Design and Photography
+      Celebslam
+  -
+    -
+      COOL HUNTING
+      We Make Money Not Art
+    -
+      Creating Passionate Users
+      -
+        -
+          Schneier on Security
+          pharyngula
+        -
+          -
+            -
+              Seth Godin's Blog on marketing, tribes and respect
+              -
+                Autoblog
+                -
+                  Neil Gaiman's Journal
+                  kottke.org
+            -
+              blog maverick
+              -
+                Eschaton
+                -
+                  Joi Ito's Web
+                  -
+                    -
+                      -
+                        The Viral Garden
+                        -
+                          NewsBusters
+                          Tech
+                      -
+                        -
+                          TechCrunch
+                          -
+                            Engadget RSS Feed
+                            -
+                              Slashdot
+                              -
+                                -
+                                  SimpleBits
+                                  -
+                                    Derek Powazek
+                                    -
+                                      ongoing by Tim Bray
+                                      -
+                                        Sifry's Alerts - David Sifry
+                                        -
+                                          -
+                                            Signal v. Noise - Medium
+                                            -
+                                              WIL WHEATON dot NET
+                                              43 Folders
+                                          -
+                                            Techdirt.
+                                            ScienceBlogs - Where the world discusses science
+                                -
+                                  -
+                                    Gothamist
+                                    -
+                                      ABC News: Investigative Unit
+                                      -
+                                        Wonkette
+                                        Latest from Crooks and Liars
+                                  -
+                                    Boing Boing
+                                    -
+                                      Mashable
+                                      -
+                                        Deadspin
+                                        -
+                                          Lifehacker
+                                          -
+                                            Kotaku
+                                            Gizmodo
+                        -
+                          ShoeMoney
+                          -
+                            Matt Cutts: Gadgets, Google, and SEO
+                            -
+                              The Official Google Blog
+                              -
+                                Google Blogoscoped
+                                -
+                                  Search Engine Roundtable
+                                  Google Operating System
+                    -
+                      Joel on Software
+                      -
+                        456 Berea Street
+                        -
+                          Quick Online Tips
+                          -
+                            Gapingvoid
+                            -
+                              Copyblogger
+                              -
+                                John Battelle's Search Blog
+                                -
+                                  Jeremy Zawodny's blog
+                                  The Dish
+          -
+            Latest Items from TreeHugger
+            -
+              -
+                MichelleMalkin.com
+                -
+                  mezzoblue
+                  Oilman
+              -
+                Instapundit
+                -
+                  -
+                    The Write News
+                    Little Green Footballs
+                  -
+                    -
+                      Captain's Quarters
+                      TMZ.com
+                    -
+                      Power LinePower Line
+                      -
+                        Talking Points Memo
+                        ThinkProgress
+[Finished in 1.085s]

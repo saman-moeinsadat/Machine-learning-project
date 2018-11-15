@@ -1,4 +1,4 @@
-from ai_topMatches import topMatches
+from math import sqrt
 
 def readFile(filename):
     lines = [line for line in open(filename)]
@@ -14,14 +14,73 @@ def readFile(filename):
     return rownames, colnames, data
 
 
-[r,c,d] = readFile('blogdata.txt')
-print(r)
-#print(c)
-#print(d)
-wordFrequency = {}
-for blog in r:
-    wordFrequency.setdefault(blog,{})
-    for word in c:
-        wordFrequency[blog][word] = d[r.index(blog)][c.index(word)]
-print(wordFrequency)
-print(topMatches(wordFrequency,'PaulStamatiou.com - Technology, Design and Photography'))
+def pearson(v1,v2):
+    sum1 = sum(v1)
+    sum2 = sum(v2)
+    sum1sq = sum([pow(v,2) for v in v1])
+    sum2sq = sum([pow(v,2) for v in v2])
+    psum = sum([v1[i]*v2[i] for i in range(len(v1))])
+    num=psum-(sum1*sum2/len(v1))
+    den=sqrt((sum1sq-pow(sum1,2)/len(v1))*(sum2sq-pow(sum2,2)/len(v1)))
+    if den==0: return 0
+
+    return 1.0-num/den
+
+class bicluster:
+    def __init__(self,vec,left=None,right=None,distance=0.0,id=None):
+        self.vec = vec
+        self.left = left
+        self.right = right
+        self.id = id
+        self.distance = distance
+
+def hcluster(rows,distance = pearson):
+    currentclusterid = -1
+    distances = {}
+
+    clust = [bicluster(rows[i],id = i) for i in range(len(rows))]
+
+    while len(clust) > 1:
+        lowestpair = (0,1)
+        closest = distance(clust[0].vec, clust[1].vec)
+
+        for i in range(len(clust)):
+            for j in range(i+1, len(clust)):
+                if (clust[i].id,clust[j].id) not in distances:
+                    distances[clust[i].id,clust[j].id] = distance(clust[i].vec, clust[j].vec)
+
+                d = distances[clust[i].id,clust[j].id]
+                if d < closest:
+                    lowestpair = (i,j)
+                    closest = d
+        mergevec = [(clust[lowestpair[0]].vec[i] +clust[lowestpair[1]].vec[i])/2 for i in range(len(clust[0].vec)) ]
+
+        newcluster = bicluster(mergevec,left=clust[lowestpair[0]],right=clust[lowestpair[1]],distance=closest,id=currentclusterid)
+
+        currentclusterid -= 1
+        del clust[lowestpair[1]]
+        del clust[lowestpair[0]]
+        clust.append(newcluster)
+
+    return clust[0]
+
+(blognames,words,data) = readFile('blogdata.txt')
+clust = hcluster(data)
+
+def printclust(clust, labels =None, n = 0):
+    for i in range(n):
+        print ' ',
+    if clust.id < 0:
+        print('-')
+    else:
+        if labels==None:
+            print(clust.id)
+        else:
+            print(labels[clust.id])
+
+    if clust.left != None:
+        printclust(clust.left,labels=labels,n = n+1)
+    if clust.right != None:
+        printclust(clust.right,labels=labels,n =n+1)
+
+printclust(clust,labels=blognames)
