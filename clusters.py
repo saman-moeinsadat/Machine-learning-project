@@ -138,7 +138,7 @@ def drawdendrogram(clust,labels,jpeg='clusters.jpg'):
     img.save(jpeg,'JPEG')
 
 
-blognames,words,data = readFile('blogdata.txt')
+#blognames,words,data = readFile('blogdata.txt')
 #clust = hcluster(data)
 #drawdendrogram(clust,blognames,jpeg='blogclust.jpg')
 
@@ -188,6 +188,6 @@ def kcluster(rows,distance=pearson, k=4):
 
     return bestmatches
 
-k = kcluster(data)
-for i in range(len(k)):
-    print [blognames[id] for id in k[i]]
+#k = kcluster(data)
+#for i in range(len(k)):
+    #print [blognames[id] for id in k[i]]
