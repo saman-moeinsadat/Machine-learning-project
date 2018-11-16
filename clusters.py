@@ -1,4 +1,5 @@
 from math import sqrt
+from PIL import Image, ImageDraw
 
 def readFile(filename):
     lines = [line for line in open(filename)]
@@ -83,4 +84,71 @@ def printclust(clust, labels =None, n = 0):
     if clust.right != None:
         printclust(clust.right,labels=labels,n =n+1)
 
-printclust(clust,labels=blognames)
+
+def getheight(clust):
+    if clust.left == None and clust.right == None:
+        return 1
+
+    else:
+        return getheight(clust.left) + getheight(clust.right)
+
+
+def getdepth(clust):
+    if clust.left == None and clust.right==None:
+        return 0
+    else:
+        return max(getdepth(clust.right),getdepth(clust.left)) + clust.distance
+
+
+
+def drawnode(draw,clust,x,y,scaling,labels):
+    if clust.id < 0:
+        h1 = getheight(clust.left)*20
+        h2 = getheight(clust.right)*20
+        top = y-(h1+h2)/2
+        bottom = y +(h1+h2)/2
+
+        linelength = clust.distance * scaling
+        # vertical line from this cluster to children
+        draw.line((x,top+h1/2,x,bottom- h2/2),fill = (255,0,0))
+        # horizontal to left
+        draw.line((x,top+h1/2,x+linelength,top+ h1/2),fill = (255,0,0))
+        #horizontal to right
+        draw.line((x,bottom-h2/2,x+linelength,bottom- h2/2),fill = (255,0,0))
+
+        drawnode(draw,clust.left,x+linelength,top+h1/2,scaling,labels)
+        drawnode(draw,clust.right,x+linelength,bottom - h2/2,scaling,labels)
+    else:
+        draw.text((x+5,y-7),labels[clust.id],(0,0,0))
+
+
+def drawdendrogram(clust,labels,jpeg='clusters.jpg'):
+    h=getheight(clust)*20
+    w=1200
+    depth=getdepth(clust)
+
+    scaling=float(w-150)/depth
+
+    img=Image.new('RGB',(w,h),(255,255,255))
+    draw=ImageDraw.Draw(img)
+    draw.line((0,h/2,10,h/2),fill=(255,0,0))
+
+    drawnode(draw,clust,10,(h/2),scaling,labels)
+    img.save(jpeg,'JPEG')
+
+
+blognames,words,data = readFile('blogdata.txt')
+clust = hcluster(data)
+drawdendrogram(clust,blognames,jpeg='blogclust.jpg')
+
+def rotatematrix(data):
+    newdata = []
+    for i in range(len(data[0])):
+        newrow = [data[j][i] for j in range(len(data))]
+        newdata.append(newrow)
+
+    return newdata
+
+rdata=rotatematrix(data)
+wordclust = hcluster(rdata)
+drawdendrogram(wordclust,labels=words,jpeg='wordclust.jpg')
