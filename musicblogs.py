@@ -8,7 +8,7 @@ def getWords(soup):
     con = iter(content)
     char = re.compile(r'\[.*?\]')
     content_strip = char.sub('',str(next(con).get_text()))
-    while len(content_strip.split(' ')) < 30:
+    while len(content_strip.split(' ')) < 120:
         content_strip += char.sub('',str(next(con)))
 
     list = content_strip.split(' ')
