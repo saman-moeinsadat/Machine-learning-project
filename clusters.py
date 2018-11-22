@@ -191,3 +191,51 @@ def kcluster(rows,distance=pearson, k=4):
 #k = kcluster(data)
 #for i in range(len(k)):
     #print [blognames[id] for id in k[i]]
+
+def scaledown(data,distance=pearson,rate = 0.01):
+    n = len(data)
+    realdist = [[distance(data[i],data[j]) for i in range(n)] for j in range(n)]
+    loc = [[random.random(),random.random()] for i in range(n) ]
+    fakedist = [[0.0 for i in range(n)] for j in range(n)]
+    lasterror = None
+    for m in range(1000):
+        for i in range(n):
+            for j in range(n):
+                fakedist[i][j] = sqrt(sum([pow(loc[i][x] -loc[j][x],2) for x in range(len(loc[i]))]))
+
+        grad = [[0.0,0.0] for i in range(n)]
+        totalerror = 0
+
+        for k in range(n):
+            for j in range(n):
+                if j == k:
+                    continue
+                errorterm = (fakedist[k][j] - realdist[k][j]) / realdist[k][j]
+                grad[k][0] += ((loc[k][0] - loc[j][0]) / fakedist[j][k])*errorterm
+                grad[k][1] += ((loc[k][1] - loc[j][1]) / fakedist[j][k])*errorterm
+                totalerror += abs(errorterm)
+
+        print totalerror
+        if totalerror > lasterror:
+            print k
+            break
+        lasterror = totalerror
+
+        for k in range(n):
+            loc[k][0] -= rate*grad[k][0]
+            loc[k][1] -= rate*grad[k][1]
+
+    return loc
+def draw2d(data,labels,jpeg = 'mds2d.jpg'):
+    img = Image.new('RGB',(2000,2000),(255,255,255))
+    draw = ImageDraw.Draw(img)
+    for i in range(len(data)):
+        x = (data[i][0]+0.5)*1000
+        y = (data[i][1]+0.5)*1000
+        draw.text((x,y),labels[i],(0,0,0))
+    img.save(jpeg,'JPEG')
+
+
+blognames,words,data = readFile('blogdata.txt')
+data2D = scaledown(data)
+draw2d(data2D,blognames,jpeg = 'blogs2d.jpg')
