@@ -75,7 +75,7 @@ class crawler:
                 except:
                     print "could not open %s" %page
                     continue
-                soup=BeautifulSoup(c.read())
+                soup=BeautifulSoup(c.read(),'lxml')
                 self.addtoindex(page,soup)
 
 
@@ -86,14 +86,13 @@ class crawler:
                         if url.find("'")!= -1:
                             continue
                         url=url.split('#')[0]
-                        if url[0:4]=='href' and not self.isindexed():
+                        if url[0:4]=='http' and not self.isindexed(url):
                             newpages.add(url)
                         linkText=self.gettextonly(link)
                         self.addlinkref(page,url,linkText)
 
                 self.dbcommit()
             pages=newpages
-
 
     def createindextables(self):
         self.con.execute('create table urllist(url)')
