@@ -113,7 +113,48 @@ wikifeeds=[]
 for line in open('musicWikiFeeds.txt'):
     wikifeeds.append(line.strip('\n'))
 
-crawler = crawler('searchindex.db')
+# crawler = crawler('searchindex.db')
 # crawler.createindextables()
 
-s = crawler.crawl(wikifeeds)
+# s = crawler.crawl(wikifeeds)
+
+
+class searcher:
+    def __init__(self, dbname):
+        self.con = sqlite3.connect(dbname)
+
+    def __del__(self):
+        self.con.close()
+
+    def getmatchrows(self,q):
+        fieldlist = 'w0.urlid'
+        tablelist = ''
+        clauselist = ''
+        words = q.split(' ')
+        tablenumber = 0
+        wordids = []
+
+        for word in words:
+            wordrow = self.con.execute("select rowid from wordlist where word = '%s'" %word).fetchone()
+            if wordrow !=None:
+                wordid = wordrow[0]
+                wordids.append(wordid)
+                if tablenumber > 0:
+                    tablelist+=','
+                    clauselist+=' and '
+                    clauselist+='w%d.urlid=w%d.urlid and ' % (tablenumber -1, tablenumber)
+                fieldlist+=',w%d.location'% tablenumber
+                tablelist+='wordlocation w%d'% tablenumber
+                clauselist+='w%d.wordid = %d' % (tablenumber,wordid)
+                tablenumber+=1
+
+        query = 'select %s from %s where %s' % (fieldlist,tablelist,clauselist)
+        cur = self.con.execute(query)
+        rows = [row for row in cur]
+
+        return rows,wordids
+
+
+
+wordsearch = searcher('searchindex.db')
+print  wordsearch.getmatchrows('underground music')
