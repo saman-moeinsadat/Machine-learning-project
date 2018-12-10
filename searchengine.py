@@ -126,6 +126,37 @@ class searcher:
     def __del__(self):
         self.con.close()
 
+    def getscoredlist(self,rows,wordids):
+        totalscores = dict([(row[0],0) for row in rows])
+
+        for (weight,scores) in weights:
+            for url in totalscores:
+                totalscores[url]+=weight*scores[url]
+
+        return totalscores
+
+    def geturlname(self,id):
+        return self.con.execute("select url from urllist where rowid = %d" % id).fetchone()[0]
+
+    def query(self,q):
+        rows,wordids = self.getmatchrows(q)
+        scores = self.getscoredlist(rows,wordids)
+        rankedscores = sorted([(score,url) for (url,score) in scores.items()],reverse = 1)
+        for (score,id) in rankedscores[0:10]:
+            print '%f\t%s'% (score,self.geturlname(id))
+
+    def normalizedscore(self,scores,smallIsBetter):
+        vsmall= 0.00001
+        if smallIsBetter:
+            minscore = min(scores.values())
+            return dict([(u,float(minscore)/max(vsmall,l)) for (u,l) in scores.items()])
+
+        else:
+            maxscore= max(scores.values())
+            if maxscore ==0:
+                maxscore=vsmall
+            return dict([(u,float(c)/maxscore) for (u,c) in scores.items()])
+
     def getmatchrows(self,q):
         fieldlist = 'w0.urlid'
         tablelist = ''
